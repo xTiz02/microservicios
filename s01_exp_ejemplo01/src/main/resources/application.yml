@@ -1,0 +1,22 @@
+# Configuración de la aplicación de Spring Boot
+#ya no se conecta a la base de datos local sino del contenedor de docker "elmongo"
+#y se registra en el servidor de eureka de docker "eureka-server"
+#al usar contenedores de docker, se debe empaquetar sin pruebas .\mvnw clean package -DskipTests
+spring:
+  application:
+    name: cjava-cursos
+  data:
+    mongodb:
+      host: elmongo
+      port: 27017
+      database: escuela
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://s9-eureka-server:8761/eureka/
+#instance:
+# hostname: localhost
+

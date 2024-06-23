@@ -1,0 +1,68 @@
+para descargar una imagen de docker hub
+imagen : mysql
+version: 8
+>docker pull mysql:8
+
+imagen : openjdk
+version: 8   ,    11   ,    17
+>docker pull openjdk:8
+
+para cear una red virtual local en docker
+>docker network create cjavacloud
+
+para ejecutar el contenedor docker de mysql8
+>docker run -p 3307:3307 --name cjava-mysql8 --network cjavacloud -e MYSQL_ROOT_PASSWORD=cjavaperu -e MYSQL_DATABASE=escuela -d mysql:8
+
+-- Ver en la consola  :  mysql -h localhost -u root -p
+
+-----------------------------para dockerizar nuestros servicios
+se generar el jar del aplicativo con comando maven
+>.\mvnw clean package
+
+crea la imagen docker del proyecto eureka server
+>docker build -t s09-eureka-server:v3 .
+
+ejecutar el contenedor de eureka usando la imagen anterior
+>docker run -p 8761:8761 --name s9-eureka-server --network cjavacloud s09-eureka-server:v3
+
+
+crea la imagen docker del proyecto config server
+>docker build -t s09-config-server:v3 .
+
+ejecutar el contenedor de config usando la imagen anterior
+>docker run -p 8889:8889 --name s9-config-server --network cjavacloud s09-config-server:v3
+
+para descargar imagen de mongo
+>docker pull mongo:6.0.3
+
+para correr el mongodb
+>docker run  -p 27017:27017  --name elmongo --network cjavacloud -d mongo:6.0.3 
+
+para compilar si hacer pruebas
+>.\mvnw clean package -DskipTests
+
+>docker build -t s09-servicio01:v1 .
+>docker run -p 8081:8081 --name s9-demoservicio01 --network cjavacloud s09-servicio01:v2
+
+>docker build -t s09-servicio02:v2 .
+>docker run -p 8082:8082 --name s9-demoservicio02 --network cjavacloud s09-servicio02:v2
+
+para produccion
+>docker build -t s09-consumidor:v1 .
+>docker run -p 7081:7081 --name s9-consumidor --network cjavacloud s09-consumidor:v1
+
+
+ejercio:
+levantar dockerizado el microservicio de respaldo:  deberia ser con mysql
+
+levantar dockerizado el microservicio consumidor:
+1. se registra como cliente en eureka-server
+2. tiene el puerto configurado como 8087 en el config-server que lee de github
+3. tiene un metodo de respaldo ante la caida del servicio cjava-cursos
+4. consume de forma balanceada de cjava-cursos (h1 y mongo)
+
+
+
+
+
+
